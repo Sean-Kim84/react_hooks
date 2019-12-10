@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 const NoteApp = () => {
-    const [notes, setNotes] = useState([]);
+    const notesData = JSON.parse(localStorage.getItem('notes'));
+    const [notes, setNotes] = useState(notesData || []);
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
 
@@ -19,6 +20,10 @@ const NoteApp = () => {
     const removeNote = (title) =>  {
       setNotes(notes.filter(note => note.title !== title))
     }
+
+    useEffect(() => {
+      localStorage.setItem('notes', JSON.stringify(notes))
+    })
 
     return (
         <div>
@@ -40,5 +45,24 @@ const NoteApp = () => {
     )
 }
 
-ReactDOM.render(<NoteApp/>, document.getElementById('root'));
+// const App = (props) => {
 
+//   const [count=0, setCount] = useState(props.count);
+//   const [text, setText] = useState('');
+
+//   useEffect(() => {
+//    console.log('Start the useEffect'); 
+//    document.title = count
+//   })
+//   return(
+//     <div>
+//       <p>The currnet {text || 'count'} is {count}</p>
+//       <button onClick={() => {setCount(count-1)}}>-1</button>
+//       <button onClick={() => {setCount(props.count)}}>setUp</button>
+//       <button onClick={() => {setCount(count+1)}}>+1</button>
+//       <input type={text} onChange={e => setText(e.target.value)}/>
+//     </div>
+//   )
+// }
+
+ReactDOM.render(<NoteApp/>, document.getElementById('root'));

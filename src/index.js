@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 const NoteApp = () => {
-    const notesData = JSON.parse(localStorage.getItem('notes'));
-    const [notes, setNotes] = useState(notesData || []);
+    const [notes, setNotes] = useState([]);
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
 
@@ -22,8 +21,15 @@ const NoteApp = () => {
     }
 
     useEffect(() => {
+      const notesData = JSON.parse(localStorage.getItem('notes'))
+      if(notesData) {
+        setNotes(notesData)
+      }
+    }, [])
+
+    useEffect(() => {
       localStorage.setItem('notes', JSON.stringify(notes))
-    })
+    }, [notes])
 
     return (
         <div>
@@ -45,24 +51,24 @@ const NoteApp = () => {
     )
 }
 
-// const App = (props) => {
+const App = (props) => {
 
-//   const [count=0, setCount] = useState(props.count);
-//   const [text, setText] = useState('');
+  const [count, setCount] = useState(props.count);
+  const [text, setText] = useState('');
 
-//   useEffect(() => {
-//    console.log('Start the useEffect'); 
-//    document.title = count
-//   })
-//   return(
-//     <div>
-//       <p>The currnet {text || 'count'} is {count}</p>
-//       <button onClick={() => {setCount(count-1)}}>-1</button>
-//       <button onClick={() => {setCount(props.count)}}>setUp</button>
-//       <button onClick={() => {setCount(count+1)}}>+1</button>
-//       <input type={text} onChange={e => setText(e.target.value)}/>
-//     </div>
-//   )
-// }
+  useEffect(() => {
+   console.log('Start the useEffect'); 
+   document.title = count
+  }, [count]) // initial State를 추가해주면 state가 변화할때마다 계속 작동한다
+  return(
+    <div>
+      <p>The currnet {text || 'count'} is {count}</p>
+      <button onClick={() => {setCount(count-1)}}>-1</button>
+      <button onClick={() => {setCount(props.count)}}>setUp</button>
+      <button onClick={() => {setCount(count+1)}}>+1</button>
+      <input type={text} onChange={e => setText(e.target.value)}/>
+    </div>
+  )
+}
 
-ReactDOM.render(<NoteApp/>, document.getElementById('root'));
+ReactDOM.render(<NoteApp />, document.getElementById('root'));

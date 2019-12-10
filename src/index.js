@@ -1,25 +1,44 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-const App = (props) => {
-  // const [count=0, setCount] = useState(props.count);
-  // const [text, setText] = useState('');
+const NoteApp = () => {
+    const [notes, setNotes] = useState([]);
+    const [title, setTitle] = useState('');
+    const [body, setBody] = useState('');
 
-  const [state, setState] = useState({
-    count: props.count,
-    text: ''
-  });
+    const addNote = (e) => {
+        e.preventDefault()
+        setNotes([
+            ...notes,
+            { title, body }
+        ])
+        setTitle('');
+        setBody('');
+    }
+    
+    const removeNote = (title) =>  {
+      setNotes(notes.filter(note => note.title !== title))
+    }
 
-
-  return (
-    <div>
-      <p>The current {state.text || 'count'} is {state.count}</p>
-      <button onClick={() => setState({count: state.count-1})}>-1</button>
-      <button onClick={() => setState({count: props.count})}>reset</button>
-      <button onClick={() => setState({count: state.count+1})}>+1</button>
-      <input value={state.text} onChange={(e) => setState({text: e.target.value})}/>
-    </div>
-  )
+    return (
+        <div>
+            <h1>Notes</h1>
+            {notes.map((note) => (
+                <div key={note.title}>
+                    <h3>{note.title}</h3>
+                    <p>{note.body}</p>
+                    <button onClick={() => removeNote(note.title)}>remove</button>
+                </div>
+            ))}
+            <p>Add note</p>
+            <form onSubmit={addNote}>
+                <input value={title} onChange={(e) => setTitle(e.target.value)} />
+                <textarea type="text" value={body} onChange={(e) => setBody(e.target.value)} />
+                <button>add note</button>
+            </form>
+        </div>
+    )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<NoteApp/>, document.getElementById('root'));
+
